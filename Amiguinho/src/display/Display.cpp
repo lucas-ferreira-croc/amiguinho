@@ -2,9 +2,11 @@
 #include <iostream>
 #include <vector>
 
+#include <chrono>
+#include <Windows.h>
+
 Display::Display()
-	: window_width(0), window_height(0),
-	window(nullptr)
+	:window(nullptr)
 {
 }
 
@@ -34,13 +36,13 @@ void Display::initialize_window()
 	glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GL_TRUE);
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	window_width = mode->width;
-	window_height = 720;
+	mode = glfwGetVideoMode(monitor);
+	window_width = 500;
+	window_height = 500;
 
-	window = glfwCreateWindow(window_width, window_height, "OpenGL 3D Renderer", NULL, NULL);
+	window = glfwCreateWindow(window_width, window_height, "Amiguinho", NULL, NULL);
 	
-	glfwSetWindowPos(window, 0, mode->height - 600);
+	set_window_pos(0, mode->height - MAX_GROUND_VALUE);
 
 	if (!window)
 	{
@@ -71,6 +73,7 @@ void Display::initialize_window()
 
 	glViewport(0, 0, buffer_width, buffer_height);
 	glfwSetWindowUserPointer(window, this);
+
 }
 
 void Display::swap_buffers()
@@ -95,10 +98,16 @@ bool Display::should_close()
 	return glfwWindowShouldClose(window);
 }
 
+
+void Display::set_window_pos(int pos_x, int pos_y)
+{
+	glfwSetWindowPos(window, pos_x, pos_y);
+}
+
 void Display::create_callbacks()
 {
 	glfwSetKeyCallback(window, Display::handle_keys);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(window, Display::framebuffer_size_callback);
 }
 
 void Display::framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -112,26 +121,10 @@ void Display::framebuffer_size_callback(GLFWwindow* window, int width, int heigh
 
 void Display::handle_keys(GLFWwindow* window, int key, int code, int action, int mode)
 {
-	Display* display = static_cast<Display*>(glfwGetWindowUserPointer(window));
+Display* display = static_cast<Display*>(glfwGetWindowUserPointer(window));
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-}
-
-void Display::setup_render_mode(int key)
-{
-	switch (key)
-	{
-	case 0:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		break;
-	case 1:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		break;
-	case 2:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-		break;
 	}
 }

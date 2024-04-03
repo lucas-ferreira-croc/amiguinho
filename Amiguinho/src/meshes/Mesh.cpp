@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <gl/glew.h>
 
+#include <iostream>
 Mesh::Mesh() : vao(0), vbo(0), ibo(0), index_count(0)
 {
 }

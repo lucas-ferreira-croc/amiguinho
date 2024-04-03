@@ -2,6 +2,8 @@
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 
+const int MAX_GROUND_VALUE = 575;
+
 class Display
 {
 public:
@@ -11,8 +13,6 @@ public:
 	void initialize_window();
 
 	void swap_buffers();
-
-	bool get_is_running() { return is_running; };
 
 	void clear_color(int r, int g, int b, int a);
 	void clear();
@@ -24,21 +24,19 @@ public:
 	int get_buffer_width() { return buffer_width; };
 	int get_buffer_height() { return buffer_height; };
 
+	const GLFWvidmode* get_mode() { return mode; }; 
 
-	static void setup_render_mode(int key);
+	void set_window_pos(int pos_x, int pos_y);
 private:
 	GLFWwindow* window;
-
+	const GLFWvidmode* mode;
+	
 	unsigned int window_width;
 	unsigned int window_height;
 
 	int buffer_width;
 	int buffer_height;
 
-	bool is_running;
-
-	unsigned int grid_vbo;
-	unsigned int grid_vao;
 
 private:
 
